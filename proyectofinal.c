@@ -2,9 +2,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <conio.h>
+#include <unistd.h>
 
 #define MAX_TRABAJADORES 10
 #define MAX_INTENTOS 3
+
+
+//Estructura para trabajador tipo trabajador
 
 typedef struct{
     char nombre[50];
@@ -15,20 +19,22 @@ typedef struct{
     float horasExtras;
 }Trabajador;
 
+//Areglo de trabajadores tipo trabajador
 Trabajador trabajadores[MAX_TRABAJADORES] = {
     {"Juan Perez", "Ju0001", 10000, 100, 200, 20},
     {"Pedro Lopez", "Pe0002", 10000, 100, 200, 12},
-    {"Maria Huratdo", "Ma0003", 10000, 100, 200, 10},
+    {"Maria Hurtado", "Ma0003", 10000, 100, 200, 10},
     {"Jose Mendez", "Jo0004", 10000, 100, 200, 11},
     {"Ana Jarquin", "An0005", 10000, 100, 200, 8},
 };
 
-
+//variables globales
 int numTrabajadores = 5;
 char usuariosRegistrados[20] = "admin";
 char contraseñasRegistradas[20] = "admin123";
 
 
+//funciones
 void registrarUsuario(){
     char Nuevacontrasena[20];
     char Nuevousuario[20];
@@ -36,7 +42,8 @@ void registrarUsuario(){
     scanf("%s", Nuevousuario);
     printf("Ingrese su contraseña: ");
     scanf("%s", Nuevacontrasena);
-    strcpy(usuariosRegistrados, Nuevousuario) && strcpy(contraseñasRegistradas, Nuevacontrasena);
+    strcpy(usuariosRegistrados, Nuevousuario); //string copy para guardar el nuevo usuario y la nueva contrasena en las contrasenas registradas
+    strcpy(contraseñasRegistradas, Nuevacontrasena);
     printf("Usuario y contraseña registrados con exito");
 
 }
@@ -50,7 +57,7 @@ void cambiarContraseña(){
     scanf("%s", usuarioActual);
     printf("Ingrese su contraseña actual: ");
     scanf("%s", contrasenaActual);
-
+    //validamos que el usuario y contraseña existan para proceder al cambio
     if (strcmp(usuarioActual, usuariosRegistrados) == 0 && strcmp(contrasenaActual, contraseñasRegistradas) == 0){
         printf("Ingrese su nueva contraseña: ");
         scanf("%s", contrasenaNueva);
@@ -76,7 +83,7 @@ int iniciarSesion(){
         scanf("%s", usuario);
         printf("Ingrese su contraseña: ");
         scanf("%s", contraseña);
-        
+        //validamos que el usuario y contraseña existan usando strcmp 
         if(strcmp(usuario, usuariosRegistrados) == 0 && strcmp(contraseña, contraseñasRegistradas) == 0){
             printf("Inicio de sesion exitoso \n");
             return 1;
@@ -94,23 +101,45 @@ int iniciarSesion(){
     return 0;
 }
 
-void presentacion(){
-    printf("Bienvenido al sistema de planilla\n");
-    printf("Universidad nacional de ingenieria");
-    printf("Ingenieria en computacions\n");
-    printf("DACTIC");
+
+//Presentacion usando asteriscos como separadores de texto para que se vea limpio y ordenado
+void presentacion() {
+    printf("********************************************************************************\n");
+    printf("*                                                                              *\n");
+    printf("*                       Bienvenido al sistema de planilla                      *\n");
+    printf("*                                                                              *\n");
+    printf("********************************************************************************\n");
+    printf("*                                                                              *\n");
+    printf("*                      Universidad Nacional de Ingenieria                      *\n");
+    printf("*                          Ingenieria en Computacion                           *\n");
+    printf("*                                  DACTIC                                      *\n");
+    printf("*                                                                              *\n");
+    printf("********************************************************************************\n");
+    printf("*                                                                              *\n");
+    printf("*                               Integrantes:                                   *\n");
+    printf("*                                                                              *\n");
+    printf("*                    Deyken Adolfo Pulido Peters 2024-1944U                    *\n");
+    printf("*                   Gustavo Adolfo Orozco Jarquin 2024-1938U                   *\n");
+    printf("*                  Martin Enrrique Bermudez Gonzales 2024-1936U                *\n");
+    printf("*                                                                              *\n");
+    printf("*                                Docente:                                      *\n");
+    printf("*                               Nelson Barrios                                 *\n");
+    printf("*                                                                              *\n");
+    printf("*                                Grupo: 1M2                                    *\n");
+    printf("*                                Fecha: 01/04/2024                             *\n");
+    printf("*                                                                              *\n");
+    printf("********************************************************************************\n");
 }
 
-#include <stdio.h>
 
 void VerTrabajadores() {
-    // Imprimir el encabezado de la tabla
+    // Imprimir el encabezado de la tabla mostrando solo los datos generales del trabajador
     printf("--------------------------------------------------------------------------------\n");
     printf("| %-20s | %-10s | %-10s | %-12s | %-10s | %-12s |\n", 
            "Nombre", "Codigo", "Salario", "Deducciones", "Comisiones", "Horas Extras");
     printf("--------------------------------------------------------------------------------\n");
 
-    // Imprimir los datos de cada trabajador
+    // Imprimir los datos de cada trabajador iterando sobre el arreglo trabajadores tomando cada uno de los modelos de datos de la estructora Trabajador
     for (int i = 0; i < numTrabajadores; i++) {
         printf("| %-20s | %-10s | %-10.2f | %-12.2f | %-10.2f | %-12.2f |\n", 
                trabajadores[i].nombre, 
@@ -125,24 +154,23 @@ void VerTrabajadores() {
 
 
 
-
+//funcion de buscar trabajador permitiendo buscar por nombre y por codigo utilizando un switch con estructuras for para iterar sobre el arreglo de trabajadores
 void BuscarTrabajador() {
     int opcion;
     char nombre[50];
     char codigo[10];
     
     printf("Buscar por: \n 1. Nombre \n 2. Codigo: \n");
-    printf("Ingrese la opcion: ");
+    printf("Ingrese la opción: ");
     scanf("%d", &opcion);
-    
+    getchar(); // Para limpiar el buffer de entrada
     
     switch (opcion) {
         case 1:
             printf("Ingrese el nombre del trabajador: ");
-            fgets(nombre, sizeof(nombre), stdin);
-            // Eliminar el carácter de nueva línea si está presente
-            int encontrado_nombre = 0;
-            nombre[strcspn(nombre, "\n")] = '\0';
+            fgets(nombre, sizeof(nombre), stdin); //Utilizamos fgets para el nombre del trabajador para poder capturar las cadenas de textos
+            nombre[strcspn(nombre, "\n")] = '\0'; //aqui eliminamos el salto de linea que genera el fgets para evitar problemas con los buffers
+            int encontrado_nombre = 0; //inicializamos esta variable para poder validar cuando se encuentra al trabajador
             for (int i = 0; i < numTrabajadores; i++) {
                 if (strcmp(trabajadores[i].nombre, nombre) == 0) {
                     printf("Nombre: %s \n", trabajadores[i].nombre);
@@ -152,19 +180,18 @@ void BuscarTrabajador() {
                     printf("Comisiones: %.2f \n", trabajadores[i].comisiones);
                     printf("Horas extras: %.2f \n", trabajadores[i].horasExtras);
                     printf("\n");
+                    encontrado_nombre = 1;
                 }
-                encontrado_nombre = 1;
             }
             if (!encontrado_nombre){
                 printf("Trabajador no encontrado.\n");
             }
             break;
         case 2:
-            printf("Ingrese el codigo del trabajador: ");
-            fgets(codigo, sizeof(codigo), stdin);
-            // Eliminar el carácter de nueva línea si está presente
-            int encontrado_codigo = 0;
+            printf("Ingrese el código del trabajador: ");
+            fgets(codigo, sizeof(codigo), stdin);//utilizamos fgets igual para capturar el codigo ya que contiene caracteres y numeros
             codigo[strcspn(codigo, "\n")] = '\0';
+            int encontrado_codigo = 0;
             for (int i = 0; i < numTrabajadores; i++) {
                 if (strcmp(trabajadores[i].codigo, codigo) == 0) {
                     printf("Nombre: %s \n", trabajadores[i].nombre);
@@ -174,61 +201,78 @@ void BuscarTrabajador() {
                     printf("Comisiones: %.2f \n", trabajadores[i].comisiones);
                     printf("Horas extras: %.2f \n", trabajadores[i].horasExtras);
                     printf("\n");
+                    encontrado_codigo = 1;
                 }
-                encontrado_codigo = 1;
-
             }
             if (!encontrado_codigo){
                 printf("Trabajador no encontrado.\n");
             }
             break;
         default:
-            system("cls");
-            printf("Opcion invalida.\n");
-            getch();
+            printf("Opción no válida\n");
             break;
     }
 }
 
 
-void agregarTrabajador(){
-    int opcion;
-    if (numTrabajadores >= MAX_TRABAJADORES){
-        printf("Maximo de trabajadores alcanzado\n");
+void agregarTrabajador() {
+    int Opcion;
+    if (numTrabajadores >= MAX_TRABAJADORES) {
+        printf("No se puede agregar más trabajadores.\n");
         return;
     }
-
-
-    Trabajador nuevotrabajador;
-    printf("\nIngrese el nombre del trabajador: ");
-    gets(nuevotrabajador.nombre);
     
-    printf("\nIngrese el salario del trabajador: \n");
-    scanf("%f", &nuevotrabajador.salario);
-    printf("\nIngrese las deducciones del trabajador: \n");
-    scanf("%f", &nuevotrabajador.deducciones);
-    printf("\nIngrese las comisiones del trabajador: \n");
-    scanf("%f", &nuevotrabajador.comisiones);
-    printf("\nIngrese las horas extras del trabajador: \n");
-    scanf("%f", &nuevotrabajador.horasExtras);
-
-    sprintf(nuevotrabajador.codigo, "%.2s%04d", nuevotrabajador.nombre, numTrabajadores + 1);
-    trabajadores[numTrabajadores++] = nuevotrabajador;
+    Trabajador nuevoTrabajador; //creamos una variable nuevo trabajador de tipo trabajador para guardar los datos del nuevo trabajador tomando la estructura de datos Trabajador
     
-    printf("\nTrabajador agregado con exito\n");
-    printf("\n");
-    printf("================================\n");
-    printf("\n");
+    while (getchar() != '\n'); //Limpiamos el bufer de entrada para evitar problemas a la hora de la impresion y la entrada de datos
+    
+    printf("Ingrese el nombre del trabajador: ");
+    fgets(nuevoTrabajador.nombre, sizeof(nuevoTrabajador.nombre), stdin);
+    nuevoTrabajador.nombre[strcspn(nuevoTrabajador.nombre, "\n")] = '\0';//usamos esta linea de codigo para eliminar el salto de linea que genera fgets
+    
+    printf("Ingrese el salario del trabajador: ");
+    while (scanf("%f", &nuevoTrabajador.salario) != 1) {
+        while (getchar() != '\n'); // Limpiar buffer de entrada
+        printf("Entrada inválida. Ingrese un número: ");
+    }
+    
+    printf("Ingrese las deducciones del trabajador: ");
+    while (scanf("%f", &nuevoTrabajador.deducciones) != 1) {
+        while (getchar() != '\n'); // Limpiar buffer de entrada
+        printf("Entrada inválida. Ingrese un número: ");
+    }
+    
+    printf("Ingrese las comisiones del trabajador: ");
+    while (scanf("%f", &nuevoTrabajador.comisiones) != 1) {
+        while (getchar() != '\n'); // Limpiar buffer de entrada
+        printf("Entrada inválida. Ingrese un número: ");
+    }
+    
+    printf("Ingrese las horas extras del trabajador: ");
+    while (scanf("%f", &nuevoTrabajador.horasExtras) != 1) {
+        while (getchar() != '\n'); // Limpiar buffer de entrada
+        printf("Entrada inválida. Ingrese un número: ");
+    }
+    
+    // Asignar código al trabajador tomando las primeras dos letras del nombre y agregando una serie de 4 digitos en conseutivo 
+    sprintf(nuevoTrabajador.codigo, "%.2s%04d", nuevoTrabajador.nombre, numTrabajadores + 1);
+
+    trabajadores[numTrabajadores] = nuevoTrabajador;//agregamos el nuevo trabajador a nuestro arreglo de trabajadores
+    numTrabajadores++;//incrementa el numero de trabajadores al agregar el trabajador
+    
+    printf("Trabajador agregado con exito, Presione enter para continuar.\n");
+    getch();
+    system("cls");
+
     printf("Desea agregar otro trabajador?\n");
-    printf("1. Si \n 2. No \n");
-    scanf("%d", &opcion);
-
-    if (opcion == 1) {
+    printf("1. Sí\n");
+    printf("2. No\n");
+    scanf("%d", &Opcion);
+    if (Opcion == 1) {
+        system("cls");
         agregarTrabajador();
     }
-    else {
-        return;
-    }
+    system("cls");
 }
 
 
@@ -236,7 +280,7 @@ void agregarTrabajador(){
 void actualizarTrabajador(){
     char codigo[10];
     int opcion;
-    printf("Ingrese el código del trabajador a actualizar: ");
+    printf("Ingrese el código del trabajador a actualizar: ");//Utilizamos codigo por comodidad a demas para ahorrar espacio ya que si permitimos la busqueda por nombre seria mucho codigo y podria generar errores
     scanf("%s", codigo);
 
     for (int i = 0; i < numTrabajadores; i++) {
@@ -264,95 +308,105 @@ void actualizarTrabajador(){
                 default:
                     printf("Opción no válida.\n");
                     return;
-            }
+            }//dependiendo de que seleccione actualizar el usuario en la estructura switch solo guardamos los datos en la posicion i del arreglo en el modelo de la estructura
             printf("Trabajador actualizado exitosamente.\n");
             return;
         }
     }
 
-    printf("Trabajador no encontrado.\n");
+    printf("Trabajador no encontrado.\n");//En caso de que no se encuentre al trabajador
     
 }
 
 float calcularIngresos(Trabajador trabajador) {
     float salarioBase = trabajador.salario;
-    float pagoHorasExtras = trabajador.horasExtras * 25; 
+    float pagoHorasExtras = trabajador.horasExtras * (((trabajador.salario / 30) / 8) * 2);
     float comisiones = trabajador.comisiones;
-    
+
     float ingresos = salarioBase + pagoHorasExtras + comisiones;
     return ingresos;
-}
-
+}//calculamos ingresos, metemos una variable trabajador de tipo Trabajador como parametro para calcular los ingresos del trabajador
 
 float calcularEgresos(Trabajador trabajador) {
     float deducciones = trabajador.deducciones;
-    float seguroSocial = trabajador.salario * 0.07; 
+    float seguroSocial = trabajador.salario * 0.07;
     float impuestoSobreRenta = 0.0;
-    
-    float ingresosTotales = calcularIngresos(trabajador);
-    
-    if (ingresosTotales*12 > 500000) {
-        impuestoSobreRenta = (((((ingresosTotales*12) - 500000) * 0.30) + 82500)/ 12);
-    } else if (ingresosTotales*12 > 330000) {
-        impuestoSobreRenta = (((((ingresosTotales*12) - 350000) * 0.25) + 45000)/ 12);
-    } else if (ingresosTotales*12 > 200000) {
-        impuestoSobreRenta = (((((ingresosTotales*12) - 200000) * 0.20) + 15000)/ 12);
-    }else if (ingresosTotales*12 > 100000) {
-        impuestoSobreRenta = ((((ingresosTotales*12) - 100000) * 0.15)/ 12);
+
+    float ingresosTotales = calcularIngresos(trabajador);//creamos una variable ingresos totales y guarda el valor de los ingresos que retorna la funcion calcularIngresos para usar ese valor en el calculo del IR
+
+    if ((ingresosTotales - seguroSocial) * 12 > 500000) {
+        impuestoSobreRenta = ((((((ingresosTotales - seguroSocial) * 12) - 500000) * 0.30) + 82500) / 12);
+    } else if ((ingresosTotales - seguroSocial) * 12 > 330000) {
+        impuestoSobreRenta = ((((((ingresosTotales - seguroSocial) * 12) - 350000) * 0.25) + 45000) / 12);
+    } else if ((ingresosTotales - seguroSocial) * 12 > 200000) {
+        impuestoSobreRenta = ((((((ingresosTotales - seguroSocial) * 12) - 200000) * 0.20) + 15000) / 12);
+    } else if ((ingresosTotales - seguroSocial) * 12 > 100000) {
+        impuestoSobreRenta = (((((ingresosTotales - seguroSocial) * 12) - 100000) * 0.15) / 12);
     }
-    
+
     float egresos = deducciones + seguroSocial + impuestoSobreRenta;
     return egresos;
-}
-
-
-void calcularIngresosEgresosParaTodos(Trabajador trabajadores[], int numTrabajadores, float ingresos[], float egresos[]) {
-    for (int i = 0; i < numTrabajadores; ++i) {
-        ingresos[i] = calcularIngresos(trabajadores[i]);
-        egresos[i] = calcularEgresos(trabajadores[i]);
-    }
-}
-
+}//calculamos egresos, metemos una variable trabajador de tipo Trabajador como parametro para calcular los egresos del trabajador
 
 void mostrarPlanilla() {
-    // Imprimir el encabezado de la tabla
-    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
-    printf("| %-10s | %-20s | %-12s | %-12s | %-12s | %-12s | %-12s | %-12s | %-12s |\n", 
-           "Codigo", "Nombre", "Salario Base", "Deducciones", "Horas Extras", "Comisiones", "Ingresos", "Egresos", "Neto a Pagar");
-    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    // Imprimir el encabezado de la tabla, la taba se imprime asignando espacios, por ejemplo el -20s alinea el texto a la izquierda con un ancho de 20 Caracteres
+    printf("--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("| %-20s | %-15s | %-12s | %-12s | %-12s | %-15s | %-12s | %-12s | %-15s | %-20s | %-12s | %-12s | %-12s |\n", 
+           "Nombre", "Salario Base", "Horas Extras", "Pago H.E.", "Comisiones", "Total Ingresos", "INSS laboral", "IR", "Otras deducciones", "Deducciones totales", "Neto", "INSS patronal", "INATEC");
+    printf("--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
     // Imprimir los datos de cada trabajador
     for (int i = 0; i < numTrabajadores; i++) {
         float ingresos = calcularIngresos(trabajadores[i]);
         float egresos = calcularEgresos(trabajadores[i]);
         float neto = ingresos - egresos;
-        printf("| %-10s | %-20s | %-12.2f | %-12.2f | %-12.2f | %-12.2f | %-12.2f | %-12.2f | %-12.2f |\n", 
-               trabajadores[i].codigo, 
+        float inssPatronal = ingresos * 0.225;
+        float inatec = trabajadores[i].salario * 0.02;
+        float seguroSocial = trabajadores[i].salario * 0.07;
+        float impuestoSobreRenta = 0.0;
+        
+        if ((ingresos - seguroSocial) * 12 > 500000) {
+            impuestoSobreRenta = ((((((ingresos-seguroSocial) * 12) - 500000) * 0.30) + 82500) / 12);
+        } else if ((ingresos - seguroSocial) * 12 > 330000) {
+            impuestoSobreRenta = ((((((ingresos-seguroSocial) * 12) - 350000) * 0.25) + 45000) / 12);
+        } else if ((ingresos - seguroSocial) * 12 > 200000) {
+            impuestoSobreRenta = ((((((ingresos-seguroSocial) * 12) - 200000) * 0.20) + 15000) / 12);
+        } else if ((ingresos - seguroSocial) * 12 > 100000) {
+            impuestoSobreRenta = (((((ingresos-seguroSocial) * 12) - 100000) * 0.15) / 12);
+        }
+
+        printf("| %-20s | %-15.2f | %-12.2f | %-12.2f | %-12.2f | %-15.2f | %-12.2f | %-12.2f | %-15.2f | %-20.2f | %-12.2f | %-12.2f | %-12.2f |\n", 
                trabajadores[i].nombre, 
                trabajadores[i].salario, 
-               trabajadores[i].deducciones,
                trabajadores[i].horasExtras, 
+               (trabajadores[i].horasExtras * (((trabajadores[i].salario / 30) / 8) * 2)),
                trabajadores[i].comisiones, 
                ingresos, 
-               egresos, 
-               neto);
+               seguroSocial, 
+               impuestoSobreRenta, 
+               trabajadores[i].deducciones,
+               (trabajadores[i].deducciones + seguroSocial + impuestoSobreRenta), 
+               neto, 
+               inssPatronal, 
+               inatec);
     }
-    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 }
 
 void menuPlanilla(){
-    int Opcion;
+    int Opcion; //Menu sencillo utilizando Estructura switch para hacer llamado de cada una de las funciones dependiendo de la eleccion
     do
     {
         printf("\n Menu Planilla \n");
         printf("1. Buscar trabajador \n");
         printf("2. Agregar trabajador \n");
         printf("3. Actualizar trabajador \n");
-        printf("4. Ver Trabajdores\n");
+        printf("4. Ver Trabajadores\n");
         printf("5. Mostrar planilla \n");
         printf("6. Volver\n");
         printf("Ingrese una opcion: \n");
         scanf("%d", &Opcion);
+        
 
         switch (Opcion){
             case 1:
@@ -403,15 +457,15 @@ void menuPlanilla(){
 
 
 int menu(){
-    int Opcion;
+    int Opcion;//Menu principal
     do {
-        int Opcion;
         printf("\n Menu \n");
         printf("1.Presentacion \n");
         printf("2. Menu de Planilla \n");
         printf("3. Salir\n");
         printf("Ingrese una opcion: \n");
         scanf("%d", &Opcion);
+
 
         switch (Opcion){
             
@@ -432,7 +486,7 @@ int menu(){
                 break;
         }
         
-    }while (Opcion != 3);
+    }while (Opcion != 3);//si el usuario selecciona 3 automaticamente se cierra el sistema
 
 
     return 0;
@@ -441,29 +495,36 @@ int menu(){
 
 
 int menuInicio(){
-    int Opcion;
-    do{
-        int Opcion;
+    int Opcion; // Menu de inicio donde se muestran las opciones
+    char c; // Variable para leer caracteres no numéricos
+
+    do {
         printf("\n Menu \n");
         printf("1. Iniciar Sesion\n");
         printf("2. Registrarse\n");
         printf("3. Cambiar contraseña\n");
         printf("4. Salir\n");
         printf("Ingrese una opcion: ");
-        scanf("%d", &Opcion);
-        switch(Opcion){
+
+        // Leer entrada y validar si es un número
+        if (scanf("%d", &Opcion) != 1) {
+            printf("Ingrese una opcion valida\n");
+
+            // Limpiar el buffer de entrada
+            while ((c = getchar()) != '\n' && c != EOF);
+            continue; // Volver a pedir la opción
+        }
+
+        switch(Opcion) {
             case 1:
-                if (iniciarSesion()){
+                if (iniciarSesion()) {
                     menu();
-                    
                 }
                 break;
             case 2:
-                
                 registrarUsuario();
                 break;
             case 3:
-                
                 cambiarContraseña();
                 break;
             case 4:
@@ -471,15 +532,16 @@ int menuInicio(){
                 exit(0);
                 break;
             default:
-                
                 printf("Ingrese una opcion valida\n");
-                getch();
                 break;
         }
     } while (Opcion != 4);
+
     return 0;
 }
 
+
+//cuerpo principal del codigo para hacer llamado al menu de inicio
 int main(){
     menuInicio();
     return 0;
